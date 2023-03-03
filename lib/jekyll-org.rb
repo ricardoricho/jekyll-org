@@ -2,7 +2,8 @@ if Jekyll::VERSION < '3.0'
   raise Jekyll::FatalException, 'This version of jekyll-org is only compatible with Jekyll v3 and above.'
 end
 
-require_relative './jekyll-org/converter'
+require 'jekyll-org/converter'
+
 
 module Jekyll
   module Filters
@@ -40,7 +41,7 @@ module Jekyll
       return super unless Jekyll::Converters::Org.matches(extname)
       filename = File.join(base, name)
 
-      self.data ||= Hash.new()
+      self.data ||= Hash.new
       self.content = File.read(@path || site.in_source_dir(base, name),
                                **Utils.merged_file_read_opts(site, opts))
       converter = site.find_converter_instance(Jekyll::Converters::Org)

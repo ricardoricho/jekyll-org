@@ -5,7 +5,7 @@ module Jekyll
     end
 
     def self.org_config
-      site["org"] || Hash.new()
+      site["org"] || Hash.new
     end
 
     def site

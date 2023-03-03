@@ -1,18 +1,18 @@
 require 'csv'
 require 'org-ruby'
+
 require_relative './utils'
 
 module Jekyll
   module Converters
     class Org < Converter
       include Jekyll::OrgUtils
-
       safe     true
       priority :low
 
       # true if current file is an org file
       def self.matches(ext)
-        ext =~ /org/i
+        ext =~ /^\.org$/i
       end
 
       # matches, but accepts complete path
@@ -43,7 +43,7 @@ module Jekyll
             '{% raw %} ' + content.to_html + ' {% endraw %}'
           end
         else
-          parser, variables = parse_org(content)
+          parser, _settings = parse_org(content)
           convert(parser)
         end
       end
@@ -52,9 +52,7 @@ module Jekyll
         parser   = Orgmode::Parser.new(content, parser_options)
         settings = { :liquid => org_config.fetch("liquid", false) }
 
-        parser.in_buffer_settings.each_pair do |key, value|
-          # Remove #+TITLE from the buffer settings to avoid double exporting
-          parser.in_buffer_settings.delete(key) if key =~ /title/i
+        parser.buffer_settings.each_pair do |key, value|
           assign_setting(key, value, settings)
         end
 
@@ -68,7 +66,7 @@ module Jekyll
       end
 
       def liquid_enabled?(parser)
-        tuple = parser.in_buffer_settings.each_pair.find do |key, _|
+        tuple = parser.buffer_settings.each_pair.find do |key, _|
           key =~ /liquid/i
         end
 
