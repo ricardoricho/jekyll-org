@@ -1,5 +1,6 @@
 require 'csv'
 require 'org-ruby'
+
 require_relative './utils'
 
 module Jekyll
@@ -12,7 +13,7 @@ module Jekyll
 
       # true if current file is an org file
       def self.matches(ext)
-        ext =~ /org/i
+        ext =~ /^\.org$/i
       end
 
       # matches, but accepts complete path

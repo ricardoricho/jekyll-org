@@ -2,7 +2,8 @@ if Jekyll::VERSION < '3.0'
   raise Jekyll::FatalException, 'This version of jekyll-org is only compatible with Jekyll v3 and above.'
 end
 
-require_relative './jekyll-org/converter'
+require 'jekyll-org/converter'
+
 
 module Jekyll
   module Filters
