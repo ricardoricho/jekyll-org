@@ -7,7 +7,6 @@ module Jekyll
   module Converters
     class Org < Converter
       include Jekyll::OrgUtils
-
       safe     true
       priority :low
 
@@ -44,7 +43,7 @@ module Jekyll
             '{% raw %} ' + content.to_html + ' {% endraw %}'
           end
         else
-          parser, variables = parse_org(content)
+          parser, _settings = parse_org(content)
           convert(parser)
         end
       end
@@ -53,9 +52,7 @@ module Jekyll
         parser   = Orgmode::Parser.new(content, parser_options)
         settings = { :liquid => org_config.fetch("liquid", false) }
 
-        parser.in_buffer_settings.each_pair do |key, value|
-          # Remove #+TITLE from the buffer settings to avoid double exporting
-          parser.in_buffer_settings.delete(key) if key =~ /title/i
+        parser.buffer_settings.each_pair do |key, value|
           assign_setting(key, value, settings)
         end
 
@@ -69,7 +66,7 @@ module Jekyll
       end
 
       def liquid_enabled?(parser)
-        tuple = parser.in_buffer_settings.each_pair.find do |key, _|
+        tuple = parser.buffer_settings.each_pair.find do |key, _|
           key =~ /liquid/i
         end
 
